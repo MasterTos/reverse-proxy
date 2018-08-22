@@ -5,14 +5,17 @@ Docker-compose setup for starting  [Træfik](https://traefik.io/) as reverse-pro
 ## Usage
 
 Clone this repository `reverse-proxy`, change mail-address and domain, 
-and then run `docker-compose up -d` to startup the service.
+and then run `make deploy` or `docker-compose up -d` to startup the service.
 
 ```bash
 git clone https://github.com/docker-compose-examples/reverse-proxy
 cd reverse-proxy
-# Run `sed` or edit `traefik.toml` yourself
+# Run `sed` or edit `traefik.toml` and `docker-compose.yml` yourself
 sed -i 's/letsencrypt\@example\.com/mail@my-domain.com/g' traefik.toml
 sed -i 's/example\.com/my-domain.com/g' traefik.toml 
+sed -i 's/traefik\.example\.com/traefik\.my-domain.com/g' docker-compose.yml
+#Initial and Start the reverse proxy first time
+make deploy
 # Start the reverse proxy
 docker-compose up -d
 ```
@@ -30,14 +33,14 @@ services:
     - "traefik.enable=true"
     - "traefik.backend=microbot"
     - "traefik.frontend.rule=Host:microbot.example.com"
-    - "traefik.docker.network=reverseproxy_default"
+    - "traefik.docker.network=traefik"
     networks:
-    - "reverseproxy_default"
+    - "traefik"
     restart: always
 networks:
-  reverseproxy_default:
+  traefik:
     external:
-      name: reverseproxy_default
+      name: traefik
 ```
 and they will be served through the Træfik proxy. 
 
@@ -52,24 +55,24 @@ and they will be served through the Træfik proxy.
 
 * The label `traefik.frontend.rule=Host:microbot.example.com` is used by Træfik to determine which container to use for which domain.
 * The option `exposedbydefault = false` tells Træfik to only include containers with the label `traefik.enable=true`.
-* Since the gist-files are inside the directory `reverse-proxy`, docker-compose will create a network `reverseproxy_default` for the container. The part
+* Since the gist-files are inside the directory `reverse-proxy`, Makefile will create a network `traefik` for the container. The part
 
 ```yaml
   networks:
-    - "reverseproxy_default"
+    - "traefik"
 ```
 
 and
 
 ```yaml
 networks:
-  reverseproxy_default:
+  traefik:
     external:
-      name: reverseproxy_default
+      name: traefik
 ```
 of the microbot-file make sure that microbot is in the same network as Træfik.
 
-If microbot were present in two networks, the label `traefik.docker.network=reverseproxy_default` will tell Træfik which IP to use to connect to the service.
+If microbot were present in two networks, the label `traefik.docker.network=traefik` will tell Træfik which IP to use to connect to the service.
 
 # LICENSING
 
@@ -79,4 +82,4 @@ running, but the amount of work was not high enough to put it under any license.
 
 # Contributing
 
-If you want to help out in keeping this repository up-to-date, please contact me or add a comment [here](https://github.com/containerize-my-server/reverse-proxy/issues/8)
+If you want to help out in keeping this repository up-to-date, please create a pull request.
