@@ -9,8 +9,8 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      -  "$PWD/traefik.toml:/etc/traefik/traefik.toml"
-      -  "$PWD/acme:/etc/traefik/acme"
+      -  "$PWD/traefik.toml:/traefik.toml"
+      -  "$PWD/acme.json:/acme.json"
       - /var/run/docker.sock:/var/run/docker.sock
     restart: always
     labels:
