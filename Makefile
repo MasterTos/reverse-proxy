@@ -2,9 +2,9 @@ default: deploy
 
 deploy:
 	docker network create traefik
-	docker-compose up -d
 	touch acme.json
 	chmod 600 acme.json
+	docker-compose up -d
 
 clean:
 	docker-compose down
