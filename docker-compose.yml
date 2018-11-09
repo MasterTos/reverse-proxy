@@ -1,16 +1,17 @@
-version: '2'
+version: '3'
 
 services:
   proxy:
-    image: traefik
+    image: traefik:alpine # The official Traefik docker image
+    command: --docker
     networks:
       - traefik
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      -  "$PWD/traefik.toml:/traefik.toml"
-      -  "$PWD/acme.json:/acme.json"
+      -  "./traefik.toml:/traefik.toml"
+      -  "./acme.json:/acme.json"
       - /var/run/docker.sock:/var/run/docker.sock
     restart: always
     labels:
