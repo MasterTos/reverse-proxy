@@ -8,7 +8,7 @@ Clone this repository `reverse-proxy`, change mail-address and domain,
 and then run `make deploy` or `docker-compose up -d` to startup the service.
 
 ```bash
-git clone https://github.com/docker-compose-examples/reverse-proxy
+git clone https://github.com/mastertos/reverse-proxy
 cd reverse-proxy
 # Run `sed` or edit `traefik.toml` and `docker-compose.yml` yourself
 sed -i 's/letsencrypt\@example\.com/mail@my-domain.com/g' traefik.toml
